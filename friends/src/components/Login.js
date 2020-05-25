@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 
-const Login = () => {
+const Login = (props) => {
   const [credentials, setCredentials] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,17 +17,13 @@ const Login = () => {
           setIsLoading(false);
           setError("");
           localStorage.setItem("token", res.data.payload);
+          props.history.push("/protected");
         }, 300);
       })
       .catch((err) => {
-        setTimeout(() => {
-          setIsLoading(false);
-          if (err.response.status === 403) {
-            setError("Invalid Credentials");
-          } else {
-            console.log(err);
-          }
-        }, 300);
+        setIsLoading(false);
+        console.log(err);
+        setError("Invalid Credentials");
       });
     setCredentials({});
   };
